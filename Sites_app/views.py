@@ -60,34 +60,37 @@ def view_employee(request, pid):
 
 def edit_employee(request, pid):
     print("edit employee")
-    error=""
+    error = ""
     emp_obj = get_object_or_404(Employee, id=pid)
     dp_objs = Department.objects.all()
 
     if request.method == 'POST':
-        # Update employee fields with the data from the form
-        emp_obj.emp_name = request.POST.get('Employee')
-        emp_obj.email = request.POST.get('Email')
-        emp_obj.mobile = request.POST.get('Mobile')
-        dept_name = request.POST.get('Dept_type')  # Get department name from form
-        dept_obj = get_object_or_404(Department, dept_name=dept_name)  # Get department object
-        emp_obj.dept_id = dept_obj  # Assign department object to employee
-        emp_obj.address = request.POST.get('Address')
-        emp_obj.dob = request.POST.get('DOB')
-        emp_obj.doj = request.POST.get('DOJ')
-        emp_obj.gender = request.POST.get('Gender')
-        
-        # Save the updated employee object
         try:
+            # Update employee fields with the data from the form
+            emp_obj.emp_name = request.POST.get('Employee')
+            emp_obj.email = request.POST.get('Email')
+            emp_obj.mobile = request.POST.get('Mobile')
+            dept_name = request.POST.get('Dept_type')  # Get department name from form
+            
+            # Get the correct Department object based on dept_name
+            dept_obj = Department.objects.filter(dept_name=dept_name)
+            
+            emp_obj.dept_id = dept_obj.first()  # Assign department object to employee
+            emp_obj.address = request.POST.get('Address')
+            emp_obj.dob = request.POST.get('DOB')
+            emp_obj.doj = request.POST.get('DOJ')
+            emp_obj.gender = request.POST.get('Gender')
 
-            emp_obj.save()
-            error="no"
-        except:
-            error = "yes"
+            emp_obj.save()  # Save the updated employee object
+            error = "no"
+        except Department.DoesNotExist:
+            error = "Department does not exist"
+        except Exception as e:
+            error = str(e)
         print("error ", error)
-        return redirect('home')  
+        return redirect('home')  # Redirect to home page after successful update
 
-    return render(request, 'edit_employee.html',{'emp_obj':emp_obj,'dp_objs':dp_objs})
+    return render(request, 'edit_employee.html', {'emp_obj': emp_obj, 'dp_objs': dp_objs})
 
 def delete_employee(request, pid):
     try:
