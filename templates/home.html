@@ -235,32 +235,32 @@
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
 
-        <script>
-            $(document).ready(function() {
-                $('#searchBtn').click(function() {
-                    var employeeName = $('input[name="Employee"]').val().trim().toLowerCase();
-                    var mobile = $('input[name="number"]').val().trim();
-                    var email = $('input[name="Email"]').val().trim().toLowerCase();
-
-            
-                    $('#employee_table tbody tr').each(function() {
-                        var row = $(this);
-                        var rowData = row.text().toLowerCase();
-            
-                        var nameMatch = rowData.includes(employeeName);
-                        var mobileMatch = rowData.includes(mobile);
-                        var emailMatch = rowData.includes(email);
-            
-            
-                        if (nameMatch || mobileMatch || emailMatch) {
-                            row.show();
-                        } else {
-                            row.hide();
-                        }
-                    });
+    <script>
+        $(document).ready(function() {
+            $('#searchBtn').click(function() {
+                var employeeName = $('input[name="Employee"]').val().trim().toLowerCase();
+                var mobile = $('input[name="number"]').val().trim();
+                var email = $('input[name="Email"]').val().trim().toLowerCase();
+    
+                $('#employee_table tbody tr').each(function() {
+                    var row = $(this);
+                    var rowData = row.text().toLowerCase();
+                    var nameMatch = employeeName.length === 0 || rowData.includes(employeeName);
+                    var mobileMatch = mobile.length === 0 || rowData.includes(mobile);
+                    var emailMatch = email.length === 0 || rowData.includes(email);
+    
+                    // Show the row if any of the conditions match
+                    if (nameMatch && mobileMatch && emailMatch) {
+                        row.show();
+                    } else {
+                        row.hide();
+                    }
                 });
             });
-        </script>
+        });
+    </script>
+        
+        
             
 
 

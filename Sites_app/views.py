@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404,redirect,HttpResponse
 from .models import *
-# Create your views here.
+
 
 def home(request):
     dp_objs = Department.objects.all()
@@ -32,11 +32,11 @@ def home(request):
         print("error ",error)
         
         if form_type == 'dept_form':
-            return create_dept(request,error)
+            return create_dept(request,error,dp_objs,emp_objs)
   
     return render(request,'home.html',{'dp_objs': dp_objs, 'error': error, 'emp_objs':emp_objs})
 
-def create_dept(request, error):
+def create_dept(request, error,dp_objs,emp_objs):
     print("create dept")
     if request.method=='POST':
         dn = request.POST['Dept_name']
@@ -49,7 +49,7 @@ def create_dept(request, error):
         except:
             error="yes"
     print("error ",error)
-    return render(request, 'home.html')
+    return render(request, 'home.html',{'dp_objs': dp_objs, 'error': error, 'emp_objs':emp_objs})
 
 
 def view_employee(request, pid):
